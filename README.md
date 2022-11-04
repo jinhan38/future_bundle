@@ -69,7 +69,7 @@ increase the TimeOut time, change the timeOutDuration value.
                               
 
 
-Example code
+## Example code
 
 ```dart
 import 'dart:async';

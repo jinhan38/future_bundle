@@ -12,7 +12,7 @@ void main() {
   }
 
   test('adds one to input values', () {
-    FutureBundle(
+    FutureBundle().pack(
       futures: [
         checkString("first duration : 500", 500),
         checkString("second duration : 2000", 2000),

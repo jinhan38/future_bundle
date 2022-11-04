@@ -13,5 +13,23 @@ and the Flutter guide for
 
 You can use the PageView keeping position of items in Android and IOS.
 
-## Features
-initial release.
+## Usage
+
+```dart 
+    FutureBundle().pack(futures: [
+    Future.delayed(const Duration(milliseconds: 100)),
+    Future.delayed(const Duration(milliseconds: 300)),
+    Future.delayed(const Duration(milliseconds: 500)),
+    Future.delayed(const Duration(milliseconds: 700)),
+    ],
+    data: (data) {
+    // Data is Map<int, dynamic>.
+    // Key(int) is index of future.
+    // Value(dynamic) is value = future .
+    },
+    complete: (results) {
+    // Results is List<dynamic>.
+    // If you uses three Future Function, List.length is 3.
+    // Value is return value of future.
+    },);
+```

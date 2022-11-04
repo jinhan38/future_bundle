@@ -11,7 +11,7 @@ class FutureBundle {
   bool _timeOut = false;
   bool _flag = false;
   int _count = 0;
-  int _timeOutDuration = 1000;
+  int _timeOutDuration = 10000;
 
   Future<List<dynamic>?> pack({
     required List<Future<dynamic>> futures,

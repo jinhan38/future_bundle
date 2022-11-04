@@ -1,19 +1,17 @@
 library future_bundle;
 
-import 'dart:async';
 import 'dart:developer';
 
 class FutureBundle {
   final DateTime _startTime = DateTime.now();
   final Map<int, dynamic> _dataMap = {};
-  List<dynamic> _resultList = [];
   bool _eventComplete = false;
+  int _timeOutDuration = 10000;
   bool _timeOut = false;
   bool _flag = false;
   int _count = 0;
-  int _timeOutDuration = 10000;
 
-  Future<List<dynamic>?> pack({
+  Future<List<dynamic>> pack({
     required List<Future<dynamic>> futures,
     Function(List<dynamic> results)? complete,
     Function(Map<int, dynamic> data)? data,
@@ -49,9 +47,7 @@ class FutureBundle {
         _dataMap[i] = value;
         _count++;
         if (_count == futures.length) {
-          _resultList = _dataMap.entries.map((e) => e).toList();
-          _resultList.sort((a, b) => a.key.compareTo(b.key));
-          complete?.call(_resultList);
+          complete?.call(_resultValue());
           _eventComplete = true;
           return;
         }
@@ -62,7 +58,9 @@ class FutureBundle {
   /// return resultList with time log.
   List<dynamic> _resultValue() {
     log("FutureBundle pack duration milliseconds : ${DateTime.now().difference(_startTime).inMilliseconds}");
-    return _resultList;
+    List<MapEntry> temp = _dataMap.entries.map((e) => e).toList();
+    temp.sort((a, b) => a.key.compareTo(b.key));
+    return temp.map((e) => e.value).toList();
   }
 
   /// check timeOut

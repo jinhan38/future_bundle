@@ -1,6 +1,6 @@
 name: future_bundle
 description: You can now process multiple Futures at once.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/jinhan38/future_bundle
 
 environment:

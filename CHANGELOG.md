@@ -2,4 +2,10 @@
 initial release.
 
 ## 0.0.2
-chnage SDK
+change SDK
+
+## 0.0.3
+Edit return type.
+
+## 0.0.4
+Add minTime.

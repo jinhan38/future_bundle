@@ -1,5 +1,3 @@
-library future_bundle;
-
 import 'dart:developer';
 
 class FutureBundle {
@@ -18,26 +16,37 @@ class FutureBundle {
     int checkDuration = 10,
     bool useTimeOut = true,
     int? timeOutDuration,
+    bool useMinTime = false,
+    int minDuration = 100,
   }) async {
     if (timeOutDuration != null) _timeOutDuration = timeOutDuration;
+    if (_eventComplete && useMinTime) {
+      await _checkMinTime(useMinTime, minDuration);
+    }
     if (_eventComplete) return _resultValue();
     if (_timeOut) return _timeOutValue();
-    _callData(futures, complete, data);
+    _callData(futures, complete, data,
+        useMinTime: useMinTime, minDuration: minDuration);
     _checkTimeOut(useTimeOut, _timeOutDuration);
     await Future.delayed(Duration(milliseconds: checkDuration));
     return await pack(
-        futures: futures,
-        complete: complete,
-        data: data,
-        useTimeOut: useTimeOut,
-        timeOutDuration: _timeOutDuration);
+      futures: futures,
+      complete: complete,
+      data: data,
+      useTimeOut: useTimeOut,
+      timeOutDuration: _timeOutDuration,
+      useMinTime: useMinTime,
+      minDuration: minDuration,
+    );
   }
 
   _callData(
       List<Future<dynamic>> futures,
       Function(List<dynamic> results)? complete,
-      Function(Map<int, dynamic> data)? data,
-      ) {
+      Function(Map<int, dynamic> data)? data, {
+        bool useMinTime = false,
+        int minDuration = 300,
+      }) {
     if (_flag) return;
     _flag = true;
     for (int i = 0; i < futures.length; i++) {
@@ -47,6 +56,7 @@ class FutureBundle {
         _dataMap[i] = value;
         _count++;
         if (_count == futures.length) {
+          await _checkMinTime(useMinTime, minDuration);
           complete?.call(_resultValue());
           _eventComplete = true;
           return;
@@ -75,5 +85,15 @@ class FutureBundle {
     return [
       "TimeOut($_timeOutDuration) occurred. If you don't want TimeOut, set useTimeOut to false "
     ];
+  }
+
+  Future<void> _checkMinTime(bool useMinTime, int minDuration) async {
+    if (!useMinTime) return;
+    int dif = DateTime.now().difference(_startTime).inMilliseconds;
+    int duration = minDuration - dif;
+    if (duration > 0) {
+      log("Minimum time delay : ${duration.abs()}");
+      await Future.delayed(Duration(milliseconds: duration.abs()));
+    }
   }
 }
